@@ -1,6 +1,8 @@
 # BibTeX Fixer
 
-A Python tool that automatically fixes and enhances BibTeX entries using the CrossRef API. This tool helps clean up incomplete or malformed bibliography entries by fetching accurate publication information from CrossRef's comprehensive academic database.
+A Python tool that automatically fixes and enhances BibTeX entries using the CrossRef API. This tool helps clean up incomplete or malformed bibliography entries by fetching accurate publication information from CrossRef's comprehensive academic database. 
+
+There is no guarantee of reliability, since matching a malformed bibtex entry to a real publication is a fool's errand. Please manually examine the output file after processing.
 
 ## Features
 
@@ -9,7 +11,6 @@ A Python tool that automatically fixes and enhances BibTeX entries using the Cro
 - **Multiple Search Methods**: Searches by DOI, title, or author+title combinations
 - **Smart Matching**: Uses fuzzy matching to find the best matches for entries
 - **Field Cleaning**: Removes unwanted fields (abstract, keywords) and cleans formatting
-- **Journal Validation**: Ensures journal names match between original and CrossRef data
 - **Customizable Output**: Maintains proper BibTeX formatting with ordered fields
 
 ## Installation
@@ -32,7 +33,7 @@ pip install requests bibtexparser fuzzywuzzy python-Levenshtein
 ### Basic Usage
 
 ```bash
-python bibtex_fixer_v4.py input.bib
+python bibtex_fixer.py input.bib
 ```
 
 This will create a fixed version named `input_fixed.bib`.
