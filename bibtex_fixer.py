@@ -111,8 +111,12 @@ class BibTeXFixer:
         self.crossref = CrossRefAPI(email)
         self.parser = BibTexParser()
         self.parser.ignore_nonstandard_types = False
+        self.parser.homogenise_fields = True  # Standardize field names
         self.writer = BibTexWriter()
         self.writer.indent = '  '
+        self.writer.align_values = True
+        self.writer.add_trailing_comma = False  # Prevent trailing commas
+        self.writer.common_strings = []  # Avoid string substitutions
         self.max_workers = max_workers
         self.print_lock = Lock()  # For thread-safe printing
         
@@ -133,6 +137,21 @@ class BibTeXFixer:
     def save_bib_file(self, database: BibDatabase, filename: str):
         """Save BibTeX file"""
         try:
+            # Filter out empty comments before saving
+            if hasattr(database, 'comments'):
+                database.comments = [comment for comment in database.comments if comment.strip()]
+            
+            # Filter out entries with missing required fields
+            valid_entries = []
+            for entry in database.entries:
+                # Check if entry has required fields
+                if entry.get('ID') and entry.get('ENTRYTYPE'):
+                    valid_entries.append(entry)
+                else:
+                    self.thread_safe_print(f"Warning: Skipping invalid entry: {entry}")
+            
+            database.entries = valid_entries
+            
             with open(filename, 'w', encoding='utf-8') as file:
                 bibtexparser.dump(database, file, writer=self.writer)
         except Exception as e:
@@ -359,7 +378,7 @@ class BibTeXFixer:
                 # Calculate journal similarity
                 journal_similarity = fuzz.ratio(original_journal, crossref_journal) / 100.0
                 if journal_similarity < 0.8:  # Require high journal similarity
-                    self.thread_safe_print(f"  Skipping match - journal mismatch: '{original_journal}' vs '{crossref_journal}'")
+                    # self.thread_safe_print(f"  Skipping match - journal mismatch: '{original_journal}' vs '{crossref_journal}'")
                     continue
             
             # Calculate title similarity
