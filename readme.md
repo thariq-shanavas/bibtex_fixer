@@ -6,8 +6,8 @@ A Python tool that automatically fixes and enhances BibTeX entries using the Cro
 
 There is no guarantee of reliability, since matching a malformed bibtex entry to a real publication is a fool's errand. Please manually examine the output file after processing.
 
-You can verify the differences in a macOS or Linux terminal using \
-`diff input.bib output.bib`. On Windows, you'll most likely have to examine the processed bib file manually.
+You can verify the differences in a macOS or Linux terminal using `diff input.bib output.bib`.\
+On Windows, you'll most likely have to examine the processed bib file manually.
 
 ## Features
 
