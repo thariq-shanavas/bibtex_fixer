@@ -2,7 +2,12 @@
 
 A Python tool that automatically fixes and enhances BibTeX entries using the CrossRef API. This tool helps clean up incomplete or malformed bibliography entries by fetching accurate publication information from CrossRef's comprehensive academic database. 
 
+> **Warning: This script treats CrossRef as the ground truth. Crossref occasionally returns typos in the journal title, in which case you'll have to manually revert your bibtex entries.** Please read the output of the script as it runs to see what entries have been changed.
+
 There is no guarantee of reliability, since matching a malformed bibtex entry to a real publication is a fool's errand. Please manually examine the output file after processing.
+
+You can verify the differences in a macOS or Linux terminal using \
+`diff input.bib output.bib`. On Windows, you'll most likely have to examine the processed bib file manually.
 
 ## Features
 
@@ -33,25 +38,25 @@ pip install requests bibtexparser fuzzywuzzy python-Levenshtein
 ### Basic Usage
 
 ```bash
-python bibtex_fixer.py input.bib
+python bibtex_fixer.py input.bib -e your.email@example.com
 ```
-
-This will create a fixed version named `input_fixed.bib`.
+This will create a fixed version named `input_fixed.bib`.\
+Your email is passed on to the Crossref API for higher rate limits. They will not spam you or contact you for non-technical reasons - see [here](https://www.crossref.org/documentation/retrieve-metadata/rest-api/tips-for-using-the-crossref-rest-api/#00831).
 
 ### Advanced Usage
 
 ```bash
 # Specify output file
-python bibtex_fixer_v4.py input.bib -o output.bib
+python bibtex_fixer.py input.bib -o output.bib
 
 # Provide email for CrossRef API (recommended for higher rate limits)
-python bibtex_fixer_v4.py input.bib -e your.email@example.com
+python bibtex_fixer.py input.bib -e your.email@example.com
 
 # Use custom number of threads
-python bibtex_fixer_v4.py input.bib -t 10
+python bibtex_fixer.py input.bib -t 10
 
 # Combine options
-python bibtex_fixer_v4.py input.bib -o clean_bibliography.bib -e your.email@example.com -t 8
+python bibtex_fixer.py input.bib -o clean_bibliography.bib -e your.email@example.com -t 8
 ```
 
 ### Command Line Options
@@ -60,7 +65,6 @@ python bibtex_fixer_v4.py input.bib -o clean_bibliography.bib -e your.email@exam
 - `-o, --output`: Output file path (default: `input_file_fixed.bib`)
 - `-e, --email`: Email address for CrossRef API identification (recommended)
 - `-t, --threads`: Number of threads for parallel processing (default: 6)
-- `--max-workers`: Alias for `--threads`
 
 ## Examples
 
@@ -121,7 +125,7 @@ Process multiple files:
 ```bash
 # Process all .bib files in current directory
 for file in *.bib; do
-    python bibtex_fixer_v4.py "$file" -e your.email@example.com
+    python bibtex_fixer.py "$file" -e your.email@example.com
 done
 ```
 
@@ -130,7 +134,7 @@ done
 For large bibliographies with many entries:
 ```bash
 # Use more threads for faster processing
-python bibtex_fixer_v4.py large_bibliography.bib -t 12 -e your.email@example.com -o cleaned_bibliography.bib
+python bibtex_fixer.py large_bibliography.bib -t 12 -e your.email@example.com -o cleaned_bibliography.bib
 ```
 
 ## How It Works
@@ -157,12 +161,6 @@ python bibtex_fixer_v4.py large_bibliography.bib -t 12 -e your.email@example.com
    - Removed unwanted fields (abstract, keywords)
    - Consistent formatting
 
-### CrossRef API Best Practices
-
-- Always provide an email address with `-e` flag for better rate limits
-- The tool automatically applies rate limiting (100ms between requests per thread)
-- CrossRef allows up to 50 requests per second for identified users
-
 ## Troubleshooting
 
 ### Common Issues
@@ -187,4 +185,4 @@ The tool ensures consistent output formatting:
 
 ## License
 
-This tool is provided as-is for academic and research
+This tool is provided as-is for academic and research purposes
