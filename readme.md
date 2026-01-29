@@ -9,6 +9,8 @@ There is no guarantee of reliability, since matching a malformed bibtex entry to
 You can verify the differences in a macOS or Linux terminal using `diff input.bib output.bib`.\
 On Windows, you'll most likely have to examine the processed bib file manually.
 
+The boilerplate wrapper code and some parts of this README was written with the help of AI, but the reference matching algorithm was built lovingly by hand to avoid hallucinations.
+
 ## Features
 
 - **Parallel Processing**: Uses multithreading for fast processing of large bibliographies
